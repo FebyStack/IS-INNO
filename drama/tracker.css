@@ -1,0 +1,118 @@
+/* ==================================================
+   TRACKER.CSS — Tracking sheet styling
+   ================================================== */
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  padding: 12px;
+  background: var(--bg-soft);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+}
+
+.filters label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-main);
+}
+
+.filters select,
+.filters input {
+  padding: 6px 10px;
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  margin-left: 6px;
+  font-family: inherit;
+  background: white;
+}
+
+.filters select:focus,
+.filters input:focus {
+  outline: none;
+  border-color: var(--pink-medium);
+}
+
+/* Summary counters */
+#summary {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--bg-soft), #FDF0F5);
+  border-radius: var(--radius-md);
+  border-left: 5px solid var(--pink-medium);
+  font-size: 0.9rem;
+}
+
+#summary span { color: var(--text-muted); }
+#summary strong { color: var(--magenta-deep); font-size: 1rem; }
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  background: white;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+th, td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--border-light);
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--purple-dark);
+  color: var(--pink-light);
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+tr:hover { background: var(--bg-soft); }
+
+/* Status badges */
+.status {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-block;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.status-Reported   { background: #F8D7DA; color: #7A1F4F; }
+.status-InProgress { background: #FFF4D6; color: #B88548; }
+.status-Fixed      { background: #D4F0DD; color: #4E8C5A; }
+.status-Duplicate  { background: #E5E0E3; color: #6B5560; }
+
+/* Priority */
+.priority-High   { color: var(--magenta-deep); font-weight: 700; }
+.priority-Medium { color: #B88548; font-weight: 600; }
+.priority-Low    { color: #4E8C5A; font-weight: 600; }
+
+/* Action buttons */
+button.action-fixed { background: #6BAA75; }
+button.action-fixed:hover { background: #4E8C5A; }
+
+button.action-progress { background: #D9A05B; }
+button.action-progress:hover { background: #B88548; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .filters { flex-direction: column; gap: 10px; }
+  table { font-size: 0.8rem; }
+  th, td { padding: 8px 6px; }
+  #summary { flex-direction: column; gap: 6px; }
+}

@@ -1,0 +1,15 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "reports",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "labRoom", "order": "ASCENDING" },
+        { "fieldPath": "equipmentType", "order": "ASCENDING" },
+        { "fieldPath": "issueDescription", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

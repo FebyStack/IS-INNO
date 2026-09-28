@@ -1,0 +1,113 @@
+/* ==================================================
+   LOGIN.CSS — Login screen styling
+   ================================================== */
+
+#login-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.login-box {
+  background: var(--bg-card);
+  padding: 40px 35px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  border-top: 6px solid var(--pink-medium);
+}
+
+.login-logo {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.login-box h1 {
+  color: var(--magenta-deep);
+  font-size: 1.6rem;
+  margin-bottom: 4px;
+}
+
+.login-subtitle {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 25px;
+}
+
+.login-box label {
+  display: block;
+  text-align: left;
+  margin-bottom: 15px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-main);
+}
+
+.login-box input,
+.login-box select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  background: var(--bg-soft);
+}
+
+.login-box input:focus,
+.login-box select:focus {
+  outline: none;
+  border-color: var(--pink-medium);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(217, 122, 158, 0.15);
+}
+
+#loginBtn {
+  width: 100%;
+  padding: 12px;
+  background: var(--magenta-deep);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+}
+
+#loginBtn:hover {
+  background: var(--pink-medium);
+  transform: translateY(-1px);
+}
+
+#loginError {
+  color: #C0392B;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-top: 10px;
+  min-height: 20px;
+}
+
+.demo-hint {
+  margin-top: 20px;
+  padding: 12px;
+  background: var(--bg-soft);
+  border-radius: var(--radius-sm);
+  border-left: 4px solid var(--pink-medium);
+  text-align: left;
+}
+
+.demo-hint code {
+  background: var(--purple-dark);
+  color: var(--pink-light);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}

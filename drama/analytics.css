@@ -1,0 +1,27 @@
+/* ==================================================
+   ANALYTICS.CSS — Analytics section styling
+   ================================================== */
+
+#analytics-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 15px;
+}
+
+.insight {
+  padding: 18px;
+  background: linear-gradient(135deg, var(--bg-soft), #FDF0F5);
+  border-radius: var(--radius-md);
+  border-left: 5px solid var(--pink-medium);
+  font-size: 0.9rem;
+  color: var(--text-main);
+}
+
+.insight strong {
+  display: block;
+  color: var(--magenta-deep);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
