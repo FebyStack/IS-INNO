@@ -15,7 +15,7 @@ test("getRole is null when nobody is signed in", () => {
 
 test("index.html has every region the app mounts into", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
-  for (const id of ["boot", "login", "login-form", "app", "role-chip", "sign-out", "seatmap", "insights", "tracker", "report-sheet", "ticket-drawer", "confirm", "toasts"]) {
+  for (const id of ["boot", "login", "login-form", "app", "role-chip", "sign-out", "seatmap", "insights", "tracker", "report-sheet", "ticket-drawer", "confirm", "toasts", "announcer"]) {
     assert.ok(html.includes(`id="${id}"`), `missing #${id}`);
   }
 });

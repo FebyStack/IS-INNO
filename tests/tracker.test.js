@@ -21,6 +21,12 @@ test("rows escape instructor input", () => {
   assert.ok(html.includes("&lt;img"));
 });
 
+test("rowHtml and tag sanitize a hostile labRoom", () => {
+  const hostile = r({ labRoom: `<img src=x onerror="alert(1)">` });
+  assert.ok(!rowHtml(hostile, "instructor").includes("<img"));
+  assert.ok(!tag(hostile, [hostile]).includes("<img"));
+});
+
 test("technicians get the original actions; instructors get none", () => {
   assert.equal((rowHtml(r(), "technician").match(/data-act=/g) ?? []).length, 2);
   assert.equal((rowHtml(r({ status: "In Progress" }), "technician").match(/data-act=/g) ?? []).length, 1);

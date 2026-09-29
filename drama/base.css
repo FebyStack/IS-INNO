@@ -51,6 +51,9 @@ body[data-role="technician"] [data-for="instructor"] { display: none !important;
   .hide-sm { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 }
 
+/* Visually hidden, still read by screen readers */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
 /* App shell */
 .topbar {
   position: sticky; top: 0; z-index: var(--z-sticky);

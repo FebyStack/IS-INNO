@@ -25,7 +25,8 @@ export function swap(update) {
   document.startViewTransition(update).ready.catch(() => {}); // skipped transitions still run update()
 }
 
-// Toasts live in a popover so they sit above any open dialog.
+// Toasts live in a popover so they sit above any open dialog. A persistent
+// live region announces the message since the popover itself isn't reliably read.
 export function toast(message, tone = "info", iconName = "info") {
   const region = $("#toasts");
   const el = document.createElement("div");
@@ -35,6 +36,9 @@ export function toast(message, tone = "info", iconName = "info") {
   region.append(el);
   if (region.matches(":popover-open")) region.hidePopover();
   region.showPopover();
+  const announcer = $("#announcer");
+  announcer.textContent = "";
+  setTimeout(() => (announcer.textContent = message), 0);
   setTimeout(() => {
     el.classList.add("is-leaving");
     setTimeout(() => {

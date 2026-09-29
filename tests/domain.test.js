@@ -19,8 +19,17 @@ test("seatCode pads the PC number", () => {
   assert.equal(d.seatCode("Lab 1", 14), "LAB1-PC14");
 });
 
+test("seatCode strips everything but letters and digits from a hostile lab name", () => {
+  assert.equal(d.seatCode("<img src=x onerror=alert(1)>", "Computer 3"), "IMGSRCXONERRORALERT1-PC03");
+  assert.match(d.seatCode("<img src=x onerror=alert(1)>", "Computer 3"), /^[A-Z0-9-]+$/);
+});
+
 test("shortId keeps the original 6-character ticket id", () => {
   assert.equal(d.shortId("a7f3c2Zz"), "#A7F3C2");
+});
+
+test("shortId strips everything but letters and digits from a hostile id", () => {
+  assert.match(d.shortId(`<>"'alert(1)`), /^#[A-Z0-9]+$/);
 });
 
 test("normalizeStatus maps legacy Fixed to Resolved", () => {

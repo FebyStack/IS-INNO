@@ -20,9 +20,9 @@ export const normalizeStatus = (s) => (s === "Fixed" ? "Resolved" : s);
 export const pcNumber = (computer) => Number(String(computer).replace(/\D/g, "")) || 0;
 
 export const seatCode = (lab, computer) =>
-  `${String(lab).replace(/\s/g, "").toUpperCase()}-PC${String(pcNumber(computer)).padStart(2, "0")}`;
+  `${String(lab).replace(/[^a-z0-9]/gi, "").toUpperCase()}-PC${String(pcNumber(computer)).padStart(2, "0")}`;
 
-export const shortId = (id) => `#${String(id).slice(0, 6).toUpperCase()}`;
+export const shortId = (id) => `#${String(id).replace(/[^a-z0-9]/gi, "").slice(0, 6).toUpperCase()}`;
 
 const sameIssue = (a, b) =>
   a.labRoom === b.labRoom &&
