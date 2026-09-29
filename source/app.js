@@ -3,6 +3,7 @@ import { LABS, byNewest } from "./domain.js";
 import { createState } from "./store.js";
 import { createBoot } from "./boot.js";
 import { ROLE_ICON, ROLE_LABEL, clearRole, getRole, mountLogin } from "./auth.js";
+import { mountDrawer, mountTracker } from "./tracker.js";
 import { $, confirmDialog, icon, swap, toast } from "./ui.js";
 
 const state = createState({ role: getRole(), lab: LABS[0], reports: [], filter: { status: "All", query: "" } });
@@ -33,6 +34,8 @@ let mounted = false;
 function showApp() {
   if (!mounted) {
     mounted = true;
+    const drawer = mountDrawer($("#ticket-drawer"), { store: api, state });
+    mountTracker($("#tracker"), { store: api, state, drawer });
     state.subscribe(chrome);
     $("#sign-out").addEventListener("click", async () => {
       if (!(await confirmDialog("Log out of the system?", "Log out"))) return;
