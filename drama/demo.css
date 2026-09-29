@@ -1,0 +1,30 @@
+/* Demo mode wears orchid so nobody mistakes test data for the live sheet. */
+.demobar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  padding: 10px clamp(16px, 3vw, 32px);
+  border-bottom: 1px solid color-mix(in oklab, var(--orchid) 35%, var(--line));
+  background: color-mix(in oklab, var(--orchid) 9%, var(--bg));
+  color: var(--text-2); font-size: var(--fs-sm);
+}
+.demobar p { margin-right: auto; }
+.demobar strong { margin-right: 8px; color: var(--orchid); font-weight: 600; }
+body[data-demo] #sign-out { display: none; }
+
+/* Walkthrough: dim everything, ring the step target, card beside it */
+.coach { position: fixed; inset: 0; z-index: var(--z-coach); }
+.coach__spot {
+  position: fixed; border-radius: var(--r-panel); pointer-events: none;
+  box-shadow: 0 0 0 200vmax rgb(8 7 14 / .74), 0 0 0 2px var(--orchid);
+  transition: opacity var(--t3);
+}
+.coach__card {
+  position: fixed; top: var(--y); left: var(--x); width: min(340px, calc(100vw - 32px));
+  display: grid; gap: 10px; padding: 16px;
+  border: 1px solid var(--line); border-radius: var(--r-panel); background: var(--raised); box-shadow: var(--shadow);
+  transition: opacity var(--t3), translate var(--t3) var(--ease-out);
+}
+.coach.is-moving :is(.coach__spot, .coach__card) { opacity: 0; }
+.coach.is-moving .coach__card { translate: 0 6px; }
+.coach__count { color: var(--orchid); font: 500 var(--fs-xs)/1 var(--font-mono); }
+.coach__actions { display: flex; justify-content: flex-end; gap: 8px; }
+@media (max-width: 767px) { .coach__card { inset: auto 16px 16px; width: auto; } }
