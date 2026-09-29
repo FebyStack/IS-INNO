@@ -1,23 +1,66 @@
-@font-face { font-family: "Geist"; src: url("../assets/fonts/Geist-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
-@font-face { font-family: "Geist Mono"; src: url("../assets/fonts/GeistMono-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+/* ==================================================
+   FONTS
+   ================================================== */
+@font-face {
+  font-family: "Geist";
+  src: url("../assets/fonts/Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist Mono";
+  src: url("../assets/fonts/GeistMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { background: var(--bg); }
+/* ==================================================
+   RESET
+   ================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: var(--bg);
+  min-height: 100%;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
 body {
   min-height: 100dvh;
   color: var(--text);
   font: 400 var(--fs-md)/1.5 var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: none;
 }
 
-/* Textures: violet glow + vignette behind content, film grain over everything. Fixed and non-interactive. */
-body::before, body::after { content: ""; position: fixed; inset: 0; pointer-events: none; }
+/* ==================================================
+   TEXTURES
+   ================================================== */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
 body::before {
   z-index: -1;
   background:
     radial-gradient(80% 55% at 50% -12%, rgb(120 80 218 / .16), transparent 70%),
     radial-gradient(130% 110% at 50% 45%, transparent 55%, rgb(3 2 8 / .6));
 }
+
 body::after {
   z-index: var(--z-texture);
   opacity: .07;
@@ -25,57 +68,183 @@ body::after {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 
-h1, h2, h3 { font-weight: 600; line-height: 1.2; letter-spacing: -.015em; }
-h2 { font-size: var(--fs-lg); }
-button, input, textarea { font: inherit; color: inherit; }
-code, .mono { font-family: var(--font-mono); }
-.label { display: block; font: 500 var(--fs-xs)/1.4 var(--font-sans); color: var(--text-2); letter-spacing: .01em; }
-.muted { color: var(--text-3); }
-.icon { width: 1.15em; height: 1.15em; flex: none; fill: currentColor; }
-:focus-visible { outline: 2px solid var(--accent-hi); outline-offset: 2px; }
-[hidden] { display: none !important; }
-body[data-role="instructor"] [data-for="technician"],
-body[data-role="technician"] [data-for="instructor"] { display: none !important; }
+/* ==================================================
+   TYPOGRAPHY
+   ================================================== */
+h1, h2, h3 {
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -.015em;
+}
 
-/* CCS Information Systems Society logo: shown in full color; its alpha masks the shine so light stays inside the badge. */
-.crest { position: relative; aspect-ratio: 1; background: url("../assets/brand/iss-logo.png") center / contain no-repeat; }
+h2 { font-size: var(--fs-lg); }
+
+button, input, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+code, .mono { font-family: var(--font-mono); }
+
+.label {
+  display: block;
+  font: 500 var(--fs-xs)/1.4 var(--font-sans);
+  color: var(--text-2);
+  letter-spacing: .01em;
+}
+
+.muted { color: var(--text-3); }
+
+.icon {
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+  fill: currentColor;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-hi);
+  outline-offset: 2px;
+}
+
+[hidden] { display: none !important; }
+
+body[data-role="instructor"] [data-for="technician"],
+body[data-role="technician"] [data-for="instructor"] {
+  display: none !important;
+}
+
+/* ==================================================
+   CREST (ISS logo)
+   ================================================== */
+.crest {
+  position: relative;
+  aspect-ratio: 1;
+  background: url("../assets/brand/iss-logo.png") center / contain no-repeat;
+}
+
 .crest::after {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
   background: linear-gradient(105deg, transparent 40%, rgb(255 255 255 / .7) 50%, transparent 60%) 150% 0 / 250% 100% no-repeat;
   -webkit-mask: url("../assets/brand/iss-logo.png") center / contain no-repeat;
   mask: url("../assets/brand/iss-logo.png") center / contain no-repeat;
 }
 
-/* Visually hidden on small phones, still read by screen readers */
+/* ==================================================
+   UTILITIES
+   ================================================== */
 @media (max-width: 419px) {
-  .hide-sm { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .hide-sm {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }
 
-/* Visually hidden, still read by screen readers */
-.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 
-/* App shell */
+/* ==================================================
+   APP SHELL — TOPBAR
+   ================================================== */
 .topbar {
-  position: sticky; top: 0; z-index: var(--z-sticky);
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  height: 60px; padding: 0 clamp(16px, 3vw, 32px);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 60px;
+  padding: 0 clamp(12px, 3vw, 32px);
   background: rgb(12 11 19 / .8);
   backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
   border-bottom: 1px solid var(--line);
+  padding-top: env(safe-area-inset-top, 0);
 }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; }
-.brand__crest { width: 34px; }
-.topbar__end { display: flex; align-items: center; gap: 8px; }
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.brand span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.brand__crest {
+  width: 34px;
+  flex-shrink: 0;
+}
+
+.topbar__end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 .role-chip {
-  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px;
-  border-radius: var(--r-pill); background: var(--accent-lo); color: var(--accent-hi); font-size: var(--fs-xs); font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: var(--r-pill);
+  background: var(--accent-lo);
+  color: var(--accent-hi);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  white-space: nowrap;
 }
-.layout { display: grid; gap: 16px; max-width: 1400px; margin: 0 auto; padding: 16px 16px 48px; }
+
+/* ==================================================
+   APP SHELL — LAYOUT
+   ================================================== */
+.layout {
+  display: grid;
+  gap: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 16px 16px calc(48px + env(safe-area-inset-bottom, 0));
+  width: 100%;
+}
+
 @media (min-width: 1024px) {
-  .layout { gap: 20px; padding: 24px clamp(24px, 3vw, 40px) 64px; }
-  body[data-role="technician"] .layout { grid-template-columns: minmax(0, 1fr) minmax(300px, 360px); }
-  .tracker { grid-column: 1 / -1; }
+  .layout {
+    gap: 20px;
+    padding: 24px clamp(24px, 3vw, 40px) 64px;
+  }
+  body[data-role="technician"] .layout {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+  }
+  .tracker {
+    grid-column: 1 / -1;
+  }
 }
+
+/* ==================================================
+   PANEL
+   ================================================== */
 .panel {
   min-width: 0;
   padding: clamp(16px, 2vw, 24px);
@@ -84,8 +253,107 @@ body[data-role="technician"] [data-for="instructor"] { display: none !important;
   background: var(--surface);
   box-shadow: var(--shadow);
 }
-.panel__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 16px; margin-bottom: 16px; }
 
+.panel__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  margin-bottom: 16px;
+}
+
+/* ==================================================
+   MOBILE — SMALL PHONES (<= 480px)
+   ================================================== */
+@media (max-width: 480px) {
+  :root {
+    --fs-xl: 1.25rem;
+    --fs-lg: 1rem;
+  }
+
+  .topbar {
+    height: 56px;
+    padding: 0 12px;
+    padding-top: env(safe-area-inset-top, 0);
+    gap: 8px;
+  }
+
+  .brand {
+    font-size: var(--fs-sm);
+    gap: 8px;
+  }
+
+  .brand__crest {
+    width: 28px;
+  }
+
+  .role-chip {
+    font-size: .6875rem;
+    height: 24px;
+    padding: 0 10px;
+    gap: 4px;
+  }
+
+  .layout {
+    padding: 12px 12px calc(40px + env(safe-area-inset-bottom, 0));
+    gap: 12px;
+  }
+
+  .panel {
+    padding: 14px;
+    border-radius: var(--r-ctl);
+  }
+
+  .panel__head {
+    gap: 8px 12px;
+    margin-bottom: 12px;
+  }
+}
+
+/* ==================================================
+   MOBILE — VERY SMALL PHONES (<= 360px)
+   ================================================== */
+@media (max-width: 360px) {
+  .brand span {
+    display: none;
+  }
+
+  .brand__crest {
+    width: 32px;
+  }
+
+  .role-chip {
+    font-size: .625rem;
+    padding: 0 8px;
+  }
+
+  .layout {
+    padding: 10px 10px calc(36px + env(safe-area-inset-bottom, 0));
+    gap: 10px;
+  }
+
+  .panel {
+    padding: 12px;
+  }
+}
+
+/* ==================================================
+   LANDSCAPE PHONE — Compact topbar
+   ================================================== */
+@media (max-height: 500px) and (orientation: landscape) {
+  .topbar {
+    height: 48px;
+  }
+
+  .layout {
+    padding-top: 12px;
+  }
+}
+
+/* ==================================================
+   REDUCED MOTION
+   ================================================== */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 1ms !important;

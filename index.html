@@ -18,7 +18,6 @@
   <link rel="stylesheet" href="drama/form.css">
   <link rel="stylesheet" href="drama/tracker.css">
   <link rel="stylesheet" href="drama/analytics.css">
-  <link rel="stylesheet" href="drama/demo.css">
   <script type="module" src="source/app.js"></script>
 </head>
 <body>
@@ -38,38 +37,36 @@
       <p class="boot__message"></p>
       <div class="boot__actions">
         <button type="button" class="btn btn--primary" data-retry>Try again</button>
-        <button type="button" class="btn btn--ghost" data-demo>Open the demo</button>
       </div>
     </div>
   </div>
 
-  <!-- Login -->
-  <main id="login" class="login" hidden>
-    <section class="login__brand">
-      <div class="login__logo" aria-hidden="true">
-        <div class="login__orbit"><div class="login__ring"></div><span class="login__dot"></span></div>
-        <div class="login__tilt"><div class="crest login__crest"></div></div>
-        <i class="login__spark"></i><i class="login__spark"></i><i class="login__spark"></i><i class="login__spark"></i><i class="login__spark"></i><i class="login__spark"></i>
+ <!-- Login -->
+<main id="login" class="login" hidden>
+  <section class="login__brand">
+    <div class="login__logo" aria-hidden="true">
+      <div class="login__tilt"><div class="crest login__crest"></div></div>
+      <i class="login__spark"></i><i class="login__spark"></i><i class="login__spark"></i><i class="login__spark"></i><i class="login__spark"></i><i class="login__spark"></i>
+    </div>
+    <h1>CCS Lab Tracker</h1>
+    <p>Report broken lab equipment and follow every repair in one shared sheet.</p>
+  </section>
+  <form id="login-form" class="panel login__card">
+    <fieldset class="field">
+      <legend class="label">Sign in as</legend>
+      <div class="segmented segmented--fill">
+        <label class="seg"><input type="radio" name="role" value="instructor" checked><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#chalkboard-teacher"/></svg>Instructor</label>
+        <label class="seg"><input type="radio" name="role" value="technician"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#toolbox"/></svg>Lab Technician</label>
       </div>
-      <h1>CCS Lab Tracker</h1>
-      <p>Report broken lab equipment and follow every repair in one shared sheet.</p>
-    </section>
-    <form id="login-form" class="panel login__card">
-      <fieldset class="field">
-        <legend class="label">Sign in as</legend>
-        <div class="segmented segmented--fill">
-          <label class="seg"><input type="radio" name="role" value="instructor" checked><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#chalkboard-teacher"/></svg>Instructor</label>
-          <label class="seg"><input type="radio" name="role" value="technician"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#toolbox"/></svg>Lab Technician</label>
-        </div>
-      </fieldset>
-      <label class="field">
-        <span class="label">Password</span>
-        <input name="password" type="password" autocomplete="current-password" required>
-      </label>
-      <p id="login-error" class="field__error" role="alert"></p>
-      <button class="btn btn--primary btn--block">Log in</button>
-    </form>
-  </main>
+    </fieldset>
+    <label class="field">
+      <span class="label">Password</span>
+      <input name="password" type="password" autocomplete="current-password" required>
+    </label>
+    <p id="login-error" class="field__error" role="alert"></p>
+    <button class="btn btn--primary btn--block">Log in</button>
+  </form>
+</main>
 
   <!-- App -->
   <div id="app" class="app" hidden>
@@ -80,17 +77,6 @@
         <button id="sign-out" type="button" class="btn btn--ghost btn--sm"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#sign-out"/></svg><span class="hide-sm">Log out</span></button>
       </div>
     </header>
-
-    <div id="demo-bar" class="demobar" hidden>
-      <p><strong>Demo mode</strong>Test data stays in this tab.</p>
-      <div id="demo-role" class="segmented" role="group" aria-label="View as">
-        <button type="button" class="seg" data-role="instructor" aria-pressed="true">Instructor</button>
-        <button type="button" class="seg" data-role="technician" aria-pressed="false">Technician</button>
-      </div>
-      <button id="demo-seed" type="button" class="btn btn--secondary btn--sm"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#list-checks"/></svg>Load 5 test reports</button>
-      <button id="demo-tour" type="button" class="btn btn--primary btn--sm" disabled><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#play"/></svg>Walkthrough</button>
-      <button id="demo-exit" type="button" class="btn btn--ghost btn--sm"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"/></svg>Exit demo</button>
-    </div>
 
     <main class="layout">
       <section id="seatmap" class="panel seatmap" aria-labelledby="seatmap-title">
@@ -213,19 +199,6 @@
 
   <p id="announcer" class="sr-only" role="status" aria-live="polite"></p>
   <div id="toasts" class="toasts" popover="manual"></div>
-
-  <!-- Demo walkthrough -->
-  <div id="coach" class="coach" hidden>
-    <div class="coach__spot"></div>
-    <div class="coach__card" role="dialog" aria-label="Walkthrough" aria-live="polite">
-      <p class="coach__count"></p>
-      <p class="coach__text"></p>
-      <div class="coach__actions">
-        <button type="button" class="btn btn--ghost btn--sm coach__skip">Skip</button>
-        <button type="button" class="btn btn--primary btn--sm coach__next">Next</button>
-      </div>
-    </div>
-  </div>
 
 </body>
 </html>

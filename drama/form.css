@@ -1,26 +1,118 @@
-/* Report sheet */
-.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.tile {
-  position: relative; display: grid; justify-items: center; gap: 8px; padding: 14px 8px;
-  border: 1px solid var(--line); border-radius: var(--r-ctl);
-  background: var(--bg); color: var(--text-2); font-size: var(--fs-sm); cursor: pointer;
-  transition: border-color var(--t2), color var(--t2), background var(--t2);
+/* ==================================================
+   REPORT SHEET — Tiles
+   ================================================== */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
 }
-.tile input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-.tile .icon { width: 28px; height: 28px; transition: scale var(--t3) var(--ease-out), color var(--t2); }
+
+.tile {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 14px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-ctl);
+  background: var(--bg);
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: border-color var(--t2), color var(--t2), background var(--t2);
+  min-width: 0;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tile input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.tile .icon {
+  width: 28px;
+  height: 28px;
+  transition: scale var(--t3) var(--ease-out), color var(--t2);
+}
+
 .tile:hover { border-color: var(--line-strong); color: var(--text); }
-.tile:has(:checked) { border-color: var(--accent-hi); color: var(--text); background: color-mix(in oklab, var(--accent) 14%, var(--bg)); }
+
+.tile:has(:checked) {
+  border-color: var(--accent-hi);
+  color: var(--text);
+  background: color-mix(in oklab, var(--accent) 14%, var(--bg));
+}
+
 .tile:has(:checked) .icon { scale: 1.1; color: var(--accent-hi); }
 .tile:has(:focus-visible) { outline: 2px solid var(--accent-hi); outline-offset: 2px; }
 
-/* "Already open on this PC" nudge: the duplicate check, shown before typing */
+/* ==================================================
+   "ALREADY OPEN ON THIS PC" NUDGE
+   ================================================== */
 .sheet__existing {
-  display: grid; gap: 10px; padding: 14px;
-  border: 1px solid color-mix(in oklab, var(--reported) 40%, var(--line)); border-radius: var(--r-ctl);
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid color-mix(in oklab, var(--reported) 40%, var(--line));
+  border-radius: var(--r-ctl);
   background: color-mix(in oklab, var(--reported) 7%, var(--surface));
 }
+
 .sheet__existing .label { color: var(--reported); }
-.existing { display: flex; align-items: flex-start; gap: 10px; font-size: var(--fs-sm); }
-.existing > .icon { width: 18px; height: 18px; margin-top: 2px; color: var(--text-2); }
-.existing p { flex: 1; }
+
+.existing {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: var(--fs-sm);
+}
+
+.existing > .icon {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  color: var(--text-2);
+  flex-shrink: 0;
+}
+
+.existing p { flex: 1; min-width: 0; }
 .existing p span { display: block; color: var(--text-3); font-size: var(--fs-xs); }
+
+/* ==================================================
+   RESPONSIVE — SMALL PHONES
+   ================================================== */
+@media (max-width: 419px) {
+  .tiles { gap: 6px; }
+  .tile {
+    padding: 10px 4px;
+    gap: 6px;
+    font-size: var(--fs-xs);
+  }
+  .tile .icon { width: 22px; height: 22px; }
+
+  .sheet__existing { padding: 12px; gap: 8px; }
+}
+
+/* ==================================================
+   RESPONSIVE — VERY SMALL PHONES
+   ================================================== */
+@media (max-width: 360px) {
+  .tile {
+    padding: 8px 2px;
+    gap: 4px;
+    font-size: .6875rem;
+  }
+  .tile .icon { width: 20px; height: 20px; }
+}
+
+/* ==================================================
+   RESPONSIVE — LANDSCAPE PHONE
+   ================================================== */
+@media (max-height: 500px) and (orientation: landscape) {
+  .tiles { grid-template-columns: repeat(3, 1fr); }
+  .tile { padding: 8px 4px; }
+  .tile .icon { width: 22px; height: 22px; }
+}

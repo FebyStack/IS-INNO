@@ -17,27 +17,15 @@
 .login__brand h1 { font-size: clamp(2.25rem, 4.5vw, 3.5rem); line-height: 1.02; letter-spacing: -.035em; }
 .login__brand p { max-width: 32ch; color: var(--text-2); font-size: var(--fs-lg); }
 
-/* Logo stage: breathing halo, ring hugging the badge with an orbiting dot, floating badge that tilts
-   toward the pointer (tvOS-style) with sparks that twinkle harder and drift in parallax while tilting. */
+/* Logo stage: breathing halo, floating badge that tilts toward the pointer (tvOS-style)
+   with sparks that twinkle harder and drift in parallax while tilting.
+   NOTE: orbiting dot + ring removed. */
 .login__logo { --s: 1.52; position: relative; width: clamp(200px, 22vw, 280px); aspect-ratio: 1; margin-bottom: 18px; perspective: 900px; }
 .login__logo::before {
   content: ""; position: absolute; inset: -34%; border-radius: 50%; pointer-events: none;
   background: radial-gradient(closest-side, rgb(120 80 218 / .45), rgb(120 80 218 / .12) 55%, transparent);
   opacity: 0; transition: opacity 1.4s var(--ease-out);
   animation: halo 6s var(--ease-io) infinite alternate;
-}
-.login__orbit { position: absolute; inset: -6px; pointer-events: none; opacity: 0; transition: opacity 1.4s var(--ease-out) .2s; animation: orbit 7s linear infinite; }
-.login__ring {
-  position: absolute; inset: 0; border-radius: 50%;
-  background:
-    conic-gradient(transparent 0 62%, rgb(191 177 255 / .15) 70%, rgb(191 177 255 / .95) 99.6%, transparent 100%),
-    linear-gradient(rgb(255 255 255 / .08), rgb(255 255 255 / .08));
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px));
-  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px));
-}
-.login__dot {
-  position: absolute; top: -3px; left: calc(50% - 4px); width: 8px; height: 8px; border-radius: 50%;
-  background: #fff; box-shadow: 0 0 6px 2px var(--accent-hi), 0 0 18px 6px rgb(120 80 218 / .7);
 }
 .login__tilt {
   position: relative; z-index: 1; width: 100%; height: 100%;
@@ -74,13 +62,13 @@
 
 /* Reveal once the loading screen has handed the logo over */
 .login__brand :is(h1, p), .login__card { opacity: 0; }
-.login.is-ready .login__logo::before, .login.is-ready .login__orbit { opacity: 1; }
+.login.is-ready .login__logo::before { opacity: 1; }
 .login.is-ready .login__crest { animation: settle 1.4s var(--ease-out) both; }
 .login.is-ready :is(.login__brand h1, .login__brand p, .login__card) { animation: reveal 1s var(--ease-out) both; }
 .login.is-ready .login__brand p { animation-delay: .12s; }
 .login.is-ready .login__card { animation-delay: .24s; }
 
-/* Form: larger, with the same orbiting light traced around its border */
+/* Form: larger, with the same orbiting light traced around its border (kept) */
 @property --trace { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
 .login__card { position: relative; display: grid; gap: 22px; width: 100%; max-width: 472px; padding: clamp(24px, 5vw, 40px); }
 .login__card::before, .login__card::after {
@@ -101,7 +89,6 @@
 @keyframes drift { to { translate: 24vw -12vh; } }
 @keyframes sheen { 0%, 55% { background-position: 150% 0; } 100% { background-position: -50% 0; } }
 @keyframes halo { from { scale: .92; } to { scale: 1.06; } }
-@keyframes orbit { to { rotate: 1turn; } }
 @keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
 @keyframes settle { from { scale: calc(var(--s) * .94); } }
 @keyframes twinkle { 0%, 100% { opacity: 0; scale: .2; rotate: 0deg; } 45% { opacity: 1; scale: 1; } 70% { opacity: .15; scale: .6; rotate: 90deg; } }

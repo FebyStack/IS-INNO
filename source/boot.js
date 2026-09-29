@@ -26,12 +26,11 @@ export function createBoot(el, steps) {
       ring.style.strokeDashoffset = 100 - (at / steps.length) * 100;
     },
 
-    fail(message, { onDemo }) {
+    fail(message) {
       el.classList.add("is-error");
       el.querySelector(".boot__message").textContent = message;
       el.querySelector(".boot__error").hidden = false;
       el.querySelector("[data-retry]").onclick = () => location.reload();
-      el.querySelector("[data-demo]").onclick = onDemo;
     },
 
     async finish(target) {
@@ -53,7 +52,7 @@ export function createBoot(el, steps) {
           ],
           { duration: 700, easing: "cubic-bezier(.16, 1, .3, 1)", fill: "forwards" }
         );
-        await Promise.race([dock.finished, wait(900)]); // never hang if the tab is hidden
+        await Promise.race([dock.finished, wait(900)]);
       }
       el.classList.add("is-done");
       await wait(reducedMotion() ? 0 : 300);

@@ -1,13 +1,12 @@
-// Entry: boot sequence, then the live (Firestore) or demo (in-memory) app.
+// Entry: boot sequence, then the live (Firestore) app.
 import { ACTIVE, LABS, byNewest, seatCode } from "./domain.js";
-import { createState, memoryStore } from "./store.js";
+import { createState } from "./store.js";
 import { createBoot } from "./boot.js";
 import { ROLE_ICON, ROLE_LABEL, clearRole, getRole, mountLogin } from "./auth.js";
 import { mountSeatMap } from "./seatmap.js";
 import { mountReportSheet } from "./form.js";
 import { mountDrawer, mountTracker } from "./tracker.js";
 import { mountInsights } from "./analytics.js";
-import { mountDemo } from "./demo.js";
 import { $, confirmDialog, icon, swap, toast } from "./ui.js";
 
 const state = createState({ role: getRole(), lab: LABS[0], reports: [], filter: { status: "All", query: "" } });
@@ -68,14 +67,6 @@ function chrome({ role }) {
   $("#role-chip").innerHTML = `${icon(ROLE_ICON[role])}<span class="hide-sm">${ROLE_LABEL[role]}</span>`;
 }
 
-async function startDemo() {
-  $("#boot").hidden = true;
-  await sync(memoryStore());
-  state.set({ role: "instructor", lab: LABS[0] });
-  mountDemo({ store: api, state });
-  swap(showApp);
-}
-
 mountLogin({
   onLogin: (role) => {
     state.set({ role });
@@ -102,5 +93,5 @@ try {
   }
 } catch (err) {
   console.error(err);
-  boot.fail("Can't reach the database. Check the internet connection and try again.", { onDemo: startDemo });
+  boot.fail("Can't reach the database. Check the internet connection and try again.");
 }
