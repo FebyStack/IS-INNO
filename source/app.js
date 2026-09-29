@@ -81,7 +81,6 @@ mountLogin({
     state.set({ role });
     swap(showApp);
   },
-  onDemo: startDemo,
 });
 
 const timeout = (ms) => new Promise((_, reject) => setTimeout(() => reject(new Error("Timed out")), ms));
@@ -99,6 +98,7 @@ try {
   } else {
     $("#login").hidden = false;
     await boot.finish($(".login__crest"));
+    $("#login").classList.add("is-ready");
   }
 } catch (err) {
   console.error(err);

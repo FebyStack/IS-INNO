@@ -1,5 +1,5 @@
 // Role + password sign-in. Same rules and storage keys as before (client-side demo passwords).
-import { $ } from "./ui.js";
+import { $, reducedMotion } from "./ui.js";
 
 const PASSWORDS = { instructor: "instructor123", technician: "tech123" };
 
@@ -30,7 +30,20 @@ export function clearRole() {
   } catch {}
 }
 
-export function mountLogin({ onLogin, onDemo }) {
+// tvOS-style parallax: the logo tilts toward the pointer and a glare follows it.
+function tilt(root, logo) {
+  if (reducedMotion() || !matchMedia("(pointer: fine)").matches) return;
+  const clamp = (v) => Math.max(-1, Math.min(1, v));
+  root.addEventListener("pointermove", (e) => {
+    const r = logo.getBoundingClientRect();
+    const x = clamp((e.clientX - r.left - r.width / 2) / (r.width * 1.5));
+    const y = clamp((e.clientY - r.top - r.height / 2) / (r.height * 1.5));
+    logo.style.cssText = `--rx:${(-y * 12).toFixed(2)}deg;--ry:${(x * 12).toFixed(2)}deg;--gx:${50 + x * 40}%;--gy:${50 + y * 40}%;--glare:1`;
+  });
+  root.addEventListener("pointerleave", () => (logo.style.cssText = ""));
+}
+
+export function mountLogin({ onLogin }) {
   const form = $("#login-form");
   const error = $("#login-error");
   form.addEventListener("submit", (e) => {
@@ -46,5 +59,5 @@ export function mountLogin({ onLogin, onDemo }) {
     saveRole(role);
     onLogin(role);
   });
-  $("#demo-start").addEventListener("click", onDemo);
+  tilt($("#login"), $(".login__logo"));
 }

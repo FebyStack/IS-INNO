@@ -44,7 +44,7 @@ export function createBoot(el, steps) {
         const a = crest.getBoundingClientRect();
         const b = target.getBoundingClientRect();
         el.classList.add("is-docking");
-        await crest.animate(
+        const dock = crest.animate(
           [
             { transform: "none" },
             {
@@ -52,7 +52,8 @@ export function createBoot(el, steps) {
             },
           ],
           { duration: 700, easing: "cubic-bezier(.16, 1, .3, 1)", fill: "forwards" }
-        ).finished;
+        );
+        await Promise.race([dock.finished, wait(900)]); // never hang if the tab is hidden
       }
       el.classList.add("is-done");
       await wait(reducedMotion() ? 0 : 300);

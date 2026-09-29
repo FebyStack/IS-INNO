@@ -46,7 +46,10 @@
   <!-- Login -->
   <main id="login" class="login" hidden>
     <section class="login__brand">
-      <div class="crest login__crest" aria-hidden="true"></div>
+      <div class="login__logo" aria-hidden="true">
+        <div class="login__orbit"></div>
+        <div class="login__tilt"><div class="crest login__crest"></div></div>
+      </div>
       <h1>CCS Lab Tracker</h1>
       <p>Report broken lab equipment and follow every repair in one shared sheet.</p>
     </section>
@@ -64,12 +67,6 @@
       </label>
       <p id="login-error" class="field__error" role="alert"></p>
       <button class="btn btn--primary btn--block">Log in</button>
-      <button id="demo-start" type="button" class="btn btn--ghost btn--block"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#play"/></svg>Try the demo</button>
-      <dl class="login__hint">
-        <dt>Demo passwords</dt>
-        <dd><span>Instructor</span><code>instructor123</code></dd>
-        <dd><span>Technician</span><code>tech123</code></dd>
-      </dl>
     </form>
   </main>
 
