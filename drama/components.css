@@ -130,24 +130,30 @@
 .confirm p { margin-bottom: 20px; }
 .confirm__actions { display: flex; justify-content: flex-end; gap: 8px; }
 
-/* Toasts (popover = top layer, above open dialogs) */
+/* Toasts (popover = top layer, above open dialogs). Sized and aligned explicitly so no browser's
+   popover defaults can stretch the stack: toasts always keep their own height. */
 .toasts {
-  position: fixed; inset: auto 16px 16px auto; width: min(380px, calc(100% - 32px));
-  margin: 0; padding: 0; border: 0; background: none; overflow: visible;
-  display: grid; gap: 8px; pointer-events: none;
+  position: fixed; top: auto; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); left: auto;
+  width: min(380px, calc(100vw - 32px)); height: auto; max-height: calc(100dvh - 32px);
+  margin: 0; padding: 0; border: 0; background: none; color: inherit; overflow: visible;
+  display: grid; align-content: end; align-items: start; gap: 8px; pointer-events: none;
+  --toast-from: 10px;
 }
 .toasts:not(:popover-open) { display: none; }
 .toast {
-  display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px;
+  display: flex; align-items: flex-start; gap: 10px; height: auto; padding: 12px 14px;
   border: 1px solid var(--line); border-radius: var(--r-panel);
   background: var(--raised); box-shadow: var(--shadow); color: var(--text);
-  font-size: var(--fs-sm); pointer-events: auto;
+  font-size: var(--fs-sm); overflow-wrap: anywhere; pointer-events: auto;
   animation: toast-in var(--t3) var(--ease-out) both;
 }
+.toast p { flex: 1; min-width: 0; }
 .toast .icon { width: 18px; height: 18px; margin-top: 1px; color: var(--tone); }
-.toast.is-leaving { opacity: 0; translate: 0 6px; transition: opacity var(--t2), translate var(--t2); }
-@keyframes toast-in { from { opacity: 0; translate: 0 10px; } }
-@media (max-width: 767px) { .toasts { inset: 72px 16px auto; width: auto; } }
+.toast.is-leaving { opacity: 0; translate: 0 var(--toast-from); transition: opacity var(--t2), translate var(--t2); }
+@keyframes toast-in { from { opacity: 0; translate: 0 var(--toast-from); } }
+@media (max-width: 767px) {
+  .toasts { top: calc(68px + env(safe-area-inset-top)); bottom: auto; left: 12px; right: 12px; width: auto; align-content: start; --toast-from: -10px; }
+}
 
 /* Empty states teach the next step */
 .empty { display: grid; justify-items: center; gap: 8px; padding: 48px 16px; color: var(--text-2); text-align: center; }

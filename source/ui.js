@@ -34,8 +34,10 @@ export function toast(message, tone = "info", iconName = "info") {
   el.dataset.tone = tone;
   el.innerHTML = `${icon(iconName)}<p>${esc(message)}</p>`;
   region.append(el);
-  if (region.matches(":popover-open")) region.hidePopover();
-  region.showPopover();
+  if (region.showPopover) {
+    if (region.matches(":popover-open")) region.hidePopover();
+    region.showPopover();
+  }
   const announcer = $("#announcer");
   announcer.textContent = "";
   setTimeout(() => (announcer.textContent = message), 0);
@@ -43,7 +45,7 @@ export function toast(message, tone = "info", iconName = "info") {
     el.classList.add("is-leaving");
     setTimeout(() => {
       el.remove();
-      if (!region.children.length) region.hidePopover();
+      if (!region.children.length) region.hidePopover?.();
     }, 250);
   }, 4200);
 }
