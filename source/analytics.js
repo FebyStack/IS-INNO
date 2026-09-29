@@ -1,83 +1,31 @@
-// ==================================================
-// ANALYTICS.JS — Insights para sa Technician
-// CCS Lab Equipment Issue Tracker
-// ==================================================
+// Technician insights: the original metrics, drawn as stat tiles and emphasis bars (top value in violet).
+import { summarize } from "./domain.js";
+import { $, countUp, esc } from "./ui.js";
 
-import {
-  collection,
-  onSnapshot
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+export function barsHtml(pairs) {
+  const max = Math.max(1, ...pairs.map(([, n]) => n));
+  const top = pairs.reduce((a, b) => (b[1] > a[1] ? b : a));
+  return pairs
+    .map(
+      ([label, n], i) =>
+        `<li${n && label === top[0] ? ' class="is-top"' : ""}><span>${esc(label)}</span>` +
+        `<span class="bars__bar" style="--w:${n / max};--i:${i}"></span><span class="bars__value">${n}</span></li>`
+    )
+    .join("");
+}
 
-export function renderAnalytics(db) {
-  const container = document.getElementById("analytics-content");
-  if (!container) return;
-
-  onSnapshot(collection(db, "reports"), (snapshot) => {
-    const reports = [];
-    snapshot.forEach((doc) => reports.push(doc.data()));
-
-    // Empty state
-    if (reports.length === 0) {
-      container.innerHTML = `
-        <p style="color:#8B6B7A;">
-          No data yet. Submit reports to see insights.
-        </p>
-      `;
-      return;
-    }
-
-    // ==================================================
-    // COMPUTE INSIGHTS
-    // ==================================================
-    const byRoom = { "Lab 1": 0, "Lab 2": 0, "Lab 3": 0 };
-    const byEquipment = {};
-    let duplicates = 0;
-    let fixed = 0;
-
-    reports.forEach((r) => {
-      if (byRoom[r.labRoom] !== undefined) byRoom[r.labRoom]++;
-      byEquipment[r.equipmentType] = (byEquipment[r.equipmentType] || 0) + 1;
-      if (r.status === "Duplicate") duplicates++;
-      if (r.status === "Fixed") fixed++;
-    });
-
-    const topEquip = Object.entries(byEquipment).sort((a, b) => b[1] - a[1])[0];
-    const dupRate = ((duplicates / reports.length) * 100).toFixed(0);
-    const fixRate = ((fixed / reports.length) * 100).toFixed(0);
-
-    // ==================================================
-    // RENDER INSIGHTS
-    // ==================================================
-    container.innerHTML = `
-      <div class="insight">
-        <strong>Lab 1 Reports</strong>
-        ${byRoom["Lab 1"]} report${byRoom["Lab 1"] !== 1 ? "s" : ""}
-      </div>
-
-      <div class="insight">
-        <strong>Lab 2 Reports</strong>
-        ${byRoom["Lab 2"]} report${byRoom["Lab 2"] !== 1 ? "s" : ""}
-      </div>
-
-      <div class="insight">
-        <strong>Lab 3 Reports</strong>
-        ${byRoom["Lab 3"]} report${byRoom["Lab 3"] !== 1 ? "s" : ""}
-      </div>
-
-      <div class="insight">
-        <strong>Most Problematic Equipment</strong>
-        ${topEquip ? `${topEquip[0]} — ${topEquip[1]} reports` : "—"}
-      </div>
-
-      <div class="insight">
-        <strong>Duplicate Rate</strong>
-        ${duplicates} of ${reports.length} (${dupRate}%)
-      </div>
-
-      <div class="insight">
-        <strong>Resolution Rate</strong>
-        ${fixed} of ${reports.length} (${fixRate}%)
-      </div>
-    `;
-  });
+export function mountInsights(root, state) {
+  let last;
+  const paint = (s) => {
+    if (s.role !== "technician" || s.reports === last) return;
+    last = s.reports;
+    const m = summarize(s.reports);
+    countUp($("[data-stat=open]", root), m.open);
+    countUp($("[data-stat=resolved]", root), m.resolutionRate, "%");
+    countUp($("[data-stat=dup]", root), m.duplicateRate, "%");
+    $("[data-bars=lab]", root).innerHTML = barsHtml(m.byLab);
+    $("[data-bars=equipment]", root).innerHTML = barsHtml(m.byEquipment);
+  };
+  state.subscribe(paint);
+  paint(state.get());
 }

@@ -6,6 +6,7 @@ import { ROLE_ICON, ROLE_LABEL, clearRole, getRole, mountLogin } from "./auth.js
 import { mountSeatMap } from "./seatmap.js";
 import { mountReportSheet } from "./form.js";
 import { mountDrawer, mountTracker } from "./tracker.js";
+import { mountInsights } from "./analytics.js";
 import { $, confirmDialog, icon, swap, toast } from "./ui.js";
 
 const state = createState({ role: getRole(), lab: LABS[0], reports: [], filter: { status: "All", query: "" } });
@@ -48,6 +49,7 @@ function showApp() {
         else toast(`${seatCode(lab, n)} has no open tickets.`, "info", "info");
       },
     });
+    mountInsights($("#insights"), state);
     state.subscribe(chrome);
     $("#sign-out").addEventListener("click", async () => {
       if (!(await confirmDialog("Log out of the system?", "Log out"))) return;

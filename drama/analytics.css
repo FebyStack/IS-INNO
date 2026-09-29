@@ -1,27 +1,19 @@
-/* ==================================================
-   ANALYTICS.CSS — Analytics section styling
-   ================================================== */
-
-#analytics-content {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 15px;
+/* Technician insights: stat tiles + emphasis bars (top value in violet, rest recessive gray). */
+.insights { display: grid; align-content: start; gap: 14px; }
+.insights .panel__head { margin-bottom: 0; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px; }
+.stat { padding: 12px; border: 1px solid var(--line); border-radius: var(--r-ctl); background: var(--bg); }
+.stat__label { color: var(--text-2); font-size: var(--fs-xs); }
+.stat__value { margin-top: 6px; font-size: var(--fs-xl); font-weight: 600; line-height: 1.1; letter-spacing: -.02em; }
+.bars { display: grid; gap: 10px; margin-bottom: 8px; list-style: none; }
+.bars li { display: grid; grid-template-columns: 5.5rem 1fr 3ch; align-items: center; gap: 10px; color: var(--text-2); font-size: var(--fs-sm); }
+.bars__bar {
+  width: calc(var(--w) * 100%); height: 10px; border-radius: 0 4px 4px 0;
+  background: var(--line-strong); transform-origin: left;
+  transition: transform .8s var(--ease-out) calc(var(--i) * 80ms), filter var(--t2);
 }
-
-.insight {
-  padding: 18px;
-  background: linear-gradient(135deg, var(--bg-soft), #FDF0F5);
-  border-radius: var(--radius-md);
-  border-left: 5px solid var(--pink-medium);
-  font-size: 0.9rem;
-  color: var(--text-main);
-}
-
-.insight strong {
-  display: block;
-  color: var(--magenta-deep);
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 6px;
-}
+@starting-style { .bars__bar { transform: scaleX(0); } }
+.bars li:hover .bars__bar { filter: brightness(1.25); }
+.bars .is-top { color: var(--text); }
+.bars .is-top .bars__bar { background: var(--accent); }
+.bars__value { font: 500 var(--fs-xs)/1 var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
