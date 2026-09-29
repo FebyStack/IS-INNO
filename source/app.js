@@ -1,8 +1,10 @@
 // Entry: boot sequence, then the live (Firestore) or demo (in-memory) app.
-import { LABS, byNewest } from "./domain.js";
+import { ACTIVE, LABS, byNewest, seatCode } from "./domain.js";
 import { createState } from "./store.js";
 import { createBoot } from "./boot.js";
 import { ROLE_ICON, ROLE_LABEL, clearRole, getRole, mountLogin } from "./auth.js";
+import { mountSeatMap } from "./seatmap.js";
+import { mountReportSheet } from "./form.js";
 import { mountDrawer, mountTracker } from "./tracker.js";
 import { $, confirmDialog, icon, swap, toast } from "./ui.js";
 
@@ -36,6 +38,16 @@ function showApp() {
     mounted = true;
     const drawer = mountDrawer($("#ticket-drawer"), { store: api, state });
     mountTracker($("#tracker"), { store: api, state, drawer });
+    const sheet = mountReportSheet($("#report-sheet"), { store: api, state });
+    mountSeatMap($("#seatmap"), state, {
+      onSeat(lab, n) {
+        const { role, reports } = state.get();
+        if (role === "instructor") return sheet.open(lab, n);
+        const open = reports.filter((r) => r.labRoom === lab && r.computerNumber === `Computer ${n}` && ACTIVE.includes(r.status));
+        if (open.length) drawer.open(open.map((r) => r.id), seatCode(lab, n));
+        else toast(`${seatCode(lab, n)} has no open tickets.`, "info", "info");
+      },
+    });
     state.subscribe(chrome);
     $("#sign-out").addEventListener("click", async () => {
       if (!(await confirmDialog("Log out of the system?", "Log out"))) return;
