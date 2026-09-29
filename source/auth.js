@@ -38,9 +38,13 @@ function tilt(root, logo) {
     const r = logo.getBoundingClientRect();
     const x = clamp((e.clientX - r.left - r.width / 2) / (r.width * 1.5));
     const y = clamp((e.clientY - r.top - r.height / 2) / (r.height * 1.5));
-    logo.style.cssText = `--rx:${(-y * 12).toFixed(2)}deg;--ry:${(x * 12).toFixed(2)}deg;--gx:${50 + x * 40}%;--gy:${50 + y * 40}%;--glare:1`;
+    logo.style.cssText = `--rx:${(-y * 12).toFixed(2)}deg;--ry:${(x * 12).toFixed(2)}deg;--gx:${50 + x * 40}%;--gy:${50 + y * 40}%;--glare:1;--px:${x.toFixed(3)};--py:${y.toFixed(3)}`;
+    logo.dataset.active = "";
   });
-  root.addEventListener("pointerleave", () => (logo.style.cssText = ""));
+  root.addEventListener("pointerleave", () => {
+    logo.style.cssText = "";
+    delete logo.dataset.active;
+  });
 }
 
 export function mountLogin({ onLogin }) {
