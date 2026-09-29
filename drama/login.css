@@ -1,113 +1,30 @@
-/* ==================================================
-   LOGIN.CSS — Login screen styling
-   ================================================== */
-
-#login-screen {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 20px;
+.login {
+  position: relative; display: grid; align-items: center; gap: 40px;
+  min-height: 100dvh; max-width: 1180px; margin: 0 auto; padding: 48px clamp(16px, 5vw, 72px);
 }
+@media (min-width: 900px) { .login { grid-template-columns: 1.1fr .9fr; } }
 
-.login-box {
-  background: var(--bg-card);
-  padding: 40px 35px;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-  border-top: 6px solid var(--pink-medium);
+/* Slow ambient glow so the screen never sits dead still */
+.login::before {
+  content: ""; position: fixed; left: -10vmax; bottom: -15vmax; z-index: -1; pointer-events: none;
+  width: 60vmax; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(120 80 218 / .2), transparent);
+  animation: drift 18s var(--ease-io) infinite alternate;
 }
+.login__brand { display: grid; justify-items: start; gap: 18px; }
+.login__crest { width: clamp(128px, 18vw, 208px); filter: drop-shadow(0 12px 32px rgb(120 80 218 / .35)); }
+.login__crest::after { animation: sheen 7s var(--ease-io) 1.5s infinite; }
+.login__brand h1 { font-size: clamp(2.25rem, 4.5vw, 3.5rem); line-height: 1.02; letter-spacing: -.035em; }
+.login__brand p { max-width: 34ch; color: var(--text-2); font-size: var(--fs-lg); }
+.login__card { display: grid; gap: 18px; width: 100%; max-width: 420px; padding: clamp(20px, 5vw, 28px); }
+.login__card .seg { white-space: nowrap; }
+@media (min-width: 900px) { .login__card { justify-self: end; } }
+.login__card .field__error { min-height: 0; }
+.login__card .field__error:empty { display: none; }
+.login__hint { display: grid; gap: 4px; padding-top: 16px; border-top: 1px solid var(--line); font-size: var(--fs-xs); color: var(--text-3); }
+.login__hint dt { color: var(--text-2); margin-bottom: 2px; }
+.login__hint dd { display: flex; justify-content: space-between; }
+.login__hint code { color: var(--accent-hi); }
 
-.login-logo {
-  font-size: 3rem;
-  margin-bottom: 10px;
-}
-
-.login-box h1 {
-  color: var(--magenta-deep);
-  font-size: 1.6rem;
-  margin-bottom: 4px;
-}
-
-.login-subtitle {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  margin-bottom: 25px;
-}
-
-.login-box label {
-  display: block;
-  text-align: left;
-  margin-bottom: 15px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--text-main);
-}
-
-.login-box input,
-.login-box select {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 2px solid var(--border-light);
-  border-radius: var(--radius-sm);
-  font-family: inherit;
-  font-size: 0.95rem;
-  transition: all 0.2s;
-  background: var(--bg-soft);
-}
-
-.login-box input:focus,
-.login-box select:focus {
-  outline: none;
-  border-color: var(--pink-medium);
-  background: white;
-  box-shadow: 0 0 0 3px rgba(217, 122, 158, 0.15);
-}
-
-#loginBtn {
-  width: 100%;
-  padding: 12px;
-  background: var(--magenta-deep);
-  color: white;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-weight: 700;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: 10px;
-}
-
-#loginBtn:hover {
-  background: var(--pink-medium);
-  transform: translateY(-1px);
-}
-
-#loginError {
-  color: #C0392B;
-  font-weight: 600;
-  font-size: 0.85rem;
-  margin-top: 10px;
-  min-height: 20px;
-}
-
-.demo-hint {
-  margin-top: 20px;
-  padding: 12px;
-  background: var(--bg-soft);
-  border-radius: var(--radius-sm);
-  border-left: 4px solid var(--pink-medium);
-  text-align: left;
-}
-
-.demo-hint code {
-  background: var(--purple-dark);
-  color: var(--pink-light);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-}
+@keyframes drift { to { translate: 24vw -12vh; } }
+@keyframes sheen { 0%, 55% { background-position: 150% 0; } 100% { background-position: -50% 0; } }

@@ -1,93 +1,50 @@
-// ==================================================
-// AUTH.JS — Simple login system (2 roles)
-// ==================================================
+// Role + password sign-in. Same rules and storage keys as before (client-side demo passwords).
+import { $ } from "./ui.js";
 
-const PASSWORDS = {
-  instructor: "instructor123",
-  technician: "tech123"
-};
+const PASSWORDS = { instructor: "instructor123", technician: "tech123" };
 
-const ROLE_LABELS = {
-  instructor: "👨‍🏫 Instructor",
-  technician: "🔧 Lab Technician"
-};
+export const ROLE_LABEL = { instructor: "Instructor", technician: "Lab Technician" };
+export const ROLE_ICON = { instructor: "chalkboard-teacher", technician: "toolbox" };
 
-// ==================================================
-// SHOW MAIN APP
-// ==================================================
-export function showApp(role) {
-  const loginScreen = document.getElementById("login-screen");
-  const mainApp = document.getElementById("main-app");
-  const roleLabel = document.getElementById("currentUserRole");
+export const checkLogin = (role, password) => PASSWORDS[role] === password;
 
-  loginScreen.style.display = "none";
-  mainApp.style.display = "block";
-
-  document.body.classList.remove("role-instructor", "role-technician");
-  document.body.classList.add(`role-${role}`);
-
-  if (roleLabel) roleLabel.textContent = ROLE_LABELS[role] || role;
+export function getRole() {
+  try {
+    return localStorage.getItem("isLoggedIn") === "true" ? localStorage.getItem("userRole") : null;
+  } catch {
+    return null;
+  }
 }
 
-// ==================================================
-// LOGOUT
-// ==================================================
-export function logout() {
-  localStorage.removeItem("isLoggedIn");
-  localStorage.removeItem("userRole");
-
-  document.getElementById("main-app").style.display = "none";
-  document.getElementById("login-screen").style.display = "flex";
-
-  document.body.classList.remove("role-instructor", "role-technician");
+export function saveRole(role) {
+  try {
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("userRole", role);
+  } catch {}
 }
 
-// ==================================================
-// INIT LOGIN
-// ==================================================
-export function initAuth() {
-  const loginBtn = document.getElementById("loginBtn");
-  const loginRole = document.getElementById("loginRole");
-  const loginPassword = document.getElementById("loginPassword");
-  const loginError = document.getElementById("loginError");
-  const logoutBtn = document.getElementById("logoutBtn");
+export function clearRole() {
+  try {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userRole");
+  } catch {}
+}
 
-  if (!loginBtn) return;
-
-  loginBtn.addEventListener("click", () => {
-    const role = loginRole.value;
-    const password = loginPassword.value;
-
-    if (PASSWORDS[role] === password) {
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("userRole", role);
-
-      loginError.textContent = "";
-      loginPassword.value = "";
-      showApp(role);
-
-      setTimeout(() => window.location.reload(), 100);
-    } else {
-      loginError.textContent = "❌ Wrong password. Try again.";
+export function mountLogin({ onLogin, onDemo }) {
+  const form = $("#login-form");
+  const error = $("#login-error");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const role = form.role.value;
+    if (!checkLogin(role, form.password.value)) {
+      error.textContent = "Wrong password. Try again.";
+      form.password.select();
+      return;
     }
+    error.textContent = "";
+    form.password.value = "";
+    saveRole(role);
+    onLogin(role);
   });
-
-  loginPassword.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") loginBtn.click();
-  });
-
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      if (confirm("Log out of the system?")) {
-        logout();
-        window.location.reload();
-      }
-    });
-  }
-
-  // Auto-login
-  if (localStorage.getItem("isLoggedIn") === "true") {
-    const role = localStorage.getItem("userRole") || "instructor";
-    showApp(role);
-  }
+  $("#demo-start").addEventListener("click", onDemo);
 }

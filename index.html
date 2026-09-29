@@ -1,195 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CCS Lab Equipment Issue Tracker</title>
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="drama/main.css" />
-  <link rel="stylesheet" href="drama/login.css" />
-  <link rel="stylesheet" href="drama/form.css" />
-  <link rel="stylesheet" href="drama/tracker.css" />
-  <link rel="stylesheet" href="drama/analytics.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CCS Lab Tracker</title>
+  <meta name="description" content="Report broken keyboards, mice and PCs in the CCS computer labs and track every repair.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0C0B13">
+  <link rel="preload" href="assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/brand/iss-logo.png" as="image">
+  <link rel="stylesheet" href="drama/tokens.css">
+  <link rel="stylesheet" href="drama/base.css">
+  <link rel="stylesheet" href="drama/components.css">
+  <link rel="stylesheet" href="drama/boot.css">
+  <link rel="stylesheet" href="drama/login.css">
+  <script type="module" src="source/app.js"></script>
 </head>
 <body>
 
-  <!-- ================================================== -->
-  <!-- LOGIN SCREEN                                        -->
-  <!-- ================================================== -->
-  <div id="login-screen">
-    <div class="login-box">
-      <div class="login-logo">🔧</div>
-      <h1>CCS Lab Tracker</h1>
-      <p class="login-subtitle">Equipment Issue Reporting System</p>
-
-      <label>Role
-        <select id="loginRole">
-          <option value="instructor">👨‍🏫 Instructor</option>
-          <option value="technician">🔧 Lab Technician</option>
-        </select>
-      </label>
-
-      <label>Password
-        <input type="password" id="loginPassword" placeholder="Enter password" />
-      </label>
-
-      <button id="loginBtn">Log In</button>
-      <p id="loginError"></p>
-
-      <div class="demo-hint">
-        <small>
-          <strong>Demo Passwords:</strong><br>
-          Instructor → <code>instructor123</code><br>
-          Technician → <code>tech123</code>
-        </small>
+  <!-- Loading screen -->
+  <div id="boot" class="boot" role="status" aria-label="Loading CCS Lab Tracker">
+    <div class="boot__stage">
+      <svg class="boot__ring" viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="boot__track" cx="60" cy="60" r="56"/>
+        <circle class="boot__progress" cx="60" cy="60" r="56" pathLength="100"/>
+      </svg>
+      <div class="crest boot__crest" role="img" aria-label="CCS Information Systems Society logo"></div>
+    </div>
+    <p class="boot__title">CCS Lab Tracker</p>
+    <ol class="boot__log"></ol>
+    <div class="boot__error" hidden>
+      <p class="boot__message"></p>
+      <div class="boot__actions">
+        <button type="button" class="btn btn--primary" data-retry>Try again</button>
+        <button type="button" class="btn btn--ghost" data-demo hidden>Open the demo</button>
       </div>
     </div>
   </div>
 
-  <!-- ================================================== -->
-  <!-- MAIN APP                                            -->
-  <!-- ================================================== -->
-  <div id="main-app" style="display:none;">
+  <!-- Login -->
+  <main id="login" class="login" hidden>
+    <section class="login__brand">
+      <div class="crest login__crest" aria-hidden="true"></div>
+      <h1>CCS Lab Tracker</h1>
+      <p>Report broken lab equipment and follow every repair in one shared sheet.</p>
+    </section>
+    <form id="login-form" class="panel login__card">
+      <fieldset class="field">
+        <legend class="label">Sign in as</legend>
+        <div class="segmented segmented--fill">
+          <label class="seg"><input type="radio" name="role" value="instructor" checked><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#chalkboard-teacher"/></svg>Instructor</label>
+          <label class="seg"><input type="radio" name="role" value="technician"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#toolbox"/></svg>Lab Technician</label>
+        </div>
+      </fieldset>
+      <label class="field">
+        <span class="label">Password</span>
+        <input name="password" type="password" autocomplete="current-password" required>
+      </label>
+      <p id="login-error" class="field__error" role="alert"></p>
+      <button class="btn btn--primary btn--block">Log in</button>
+      <button id="demo-start" type="button" class="btn btn--ghost btn--block" hidden><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#play"/></svg>Try the demo</button>
+      <dl class="login__hint">
+        <dt>Demo passwords</dt>
+        <dd><span>Instructor</span><code>instructor123</code></dd>
+        <dd><span>Technician</span><code>tech123</code></dd>
+      </dl>
+    </form>
+  </main>
 
-    <header>
-      <div class="header-content">
-        <div>
-          <h1>🔧 CCS Lab Equipment Tracker</h1>
-          <p>Report and track broken lab equipment in real-time</p>
-        </div>
-        <div class="user-info">
-          <span id="currentUserRole">👨‍🏫 Instructor</span>
-          <button id="logoutBtn" class="logout-btn">Logout</button>
-        </div>
+  <!-- App -->
+  <div id="app" class="app" hidden>
+    <header class="topbar">
+      <div class="brand"><div class="crest brand__crest" aria-hidden="true"></div><span>CCS Lab Tracker</span></div>
+      <div class="topbar__end">
+        <span id="role-chip" class="role-chip"></span>
+        <button id="sign-out" type="button" class="btn btn--ghost btn--sm"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#sign-out"/></svg><span class="hide-sm">Log out</span></button>
       </div>
     </header>
 
-    <!-- ============================= -->
-    <!-- REPORT FORM — Instructor only -->
-    <!-- ============================= -->
-    <section id="report-section" data-role="instructor">
-      <h2>📝 Report an Equipment Issue</h2>
-      <p class="note">For Instructors only. Students must notify instructor first.</p>
-
-      <form id="report-form">
-        <label>Instructor Name *
-          <input type="text" id="instructorName" required />
-        </label>
-
-        <!-- Lab Room Dropdown -->
-        <label>Lab Room *
-          <select id="labRoom" required>
-            <option value="">-- Select Lab --</option>
-            <option value="Lab 1">Lab 1</option>
-            <option value="Lab 2">Lab 2</option>
-            <option value="Lab 3">Lab 3</option>
-          </select>
-        </label>
-
-        <!-- Computer Number Dropdown (1-50 auto-generated by JS) -->
-        <label>Computer Number *
-          <select id="computerNumber" required>
-            <option value="">-- Select Computer --</option>
-          </select>
-        </label>
-
-        <label>Equipment Type *
-          <select id="equipmentType" required>
-            <option value="">-- Select Equipment --</option>
-            <option value="Keyboard">Keyboard</option>
-            <option value="Mouse">Mouse</option>
-            <option value="Computer">Computer</option>
-          </select>
-        </label>
-
-        <label>Issue Description *
-          <textarea id="issueDescription" rows="3" required
-            placeholder="Describe the problem..."></textarea>
-        </label>
-
-        <label>Reported By (Student — Optional)
-          <input type="text" id="reportedBy" placeholder="Optional" />
-        </label>
-
-        <label>Priority *
-          <select id="priority" required>
-            <option value="Low">Low</option>
-            <option value="Medium" selected>Medium</option>
-            <option value="High">High</option>
-          </select>
-        </label>
-
-        <button type="submit" id="submit-btn">Submit Report</button>
-        <p id="form-message"></p>
-      </form>
-    </section>
-
-    <!-- ============================= -->
-    <!-- TRACKING SHEET — All roles    -->
-    <!-- ============================= -->
-    <section id="tracker-section">
-      <h2>📊 Tracking Sheet</h2>
-
-      <div class="filters">
-        <label>Filter by Status:
-          <select id="filterStatus">
-            <option value="All">All</option>
-            <option value="Reported">Reported</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Fixed">Fixed</option>
-            <option value="Duplicate">Duplicate</option>
-          </select>
-        </label>
-        <label>Search:
-          <input type="text" id="searchBox" placeholder="Search room, computer, equipment..." />
-        </label>
+    <div id="demo-bar" class="demobar" hidden>
+      <p><strong>Demo mode</strong>Test data stays in this tab.</p>
+      <div id="demo-role" class="segmented" role="group" aria-label="View as">
+        <button type="button" class="seg" data-role="instructor" aria-pressed="true">Instructor</button>
+        <button type="button" class="seg" data-role="technician" aria-pressed="false">Technician</button>
       </div>
+      <button id="demo-seed" type="button" class="btn btn--secondary btn--sm"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#list-checks"/></svg>Load 5 test reports</button>
+      <button id="demo-tour" type="button" class="btn btn--primary btn--sm" disabled><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#play"/></svg>Walkthrough</button>
+      <button id="demo-exit" type="button" class="btn btn--ghost btn--sm"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"/></svg>Exit demo</button>
+    </div>
 
-      <div id="summary">
-        <span>Total: <strong id="countTotal">0</strong></span>
-        <span>Reported: <strong id="countReported">0</strong></span>
-        <span>In Progress: <strong id="countProgress">0</strong></span>
-        <span>Fixed: <strong id="countFixed">0</strong></span>
-        <span>Duplicate: <strong id="countDuplicate">0</strong></span>
-      </div>
+    <main class="layout">
+      <section id="seatmap" class="panel seatmap" aria-labelledby="seatmap-title">
+        <header class="panel__head">
+          <div>
+            <h2 id="seatmap-title">Lab map</h2>
+            <p class="seatmap__meta"></p>
+          </div>
+          <div class="segmented seatmap__labs" role="group" aria-label="Choose a lab"></div>
+        </header>
+        <div class="seatmap__floor">
+          <p class="seatmap__front">Front of the room</p>
+          <div class="seatmap__grid" role="group" aria-label="Computers"></div>
+        </div>
+        <footer class="seatmap__foot">
+          <p class="seatmap__hint" data-for="instructor"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#hand-tap"/></svg>Tap a PC to report a problem.</p>
+          <p class="seatmap__hint" data-for="technician"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#hand-tap"/></svg>Tap a lit PC to open its tickets.</p>
+          <ul class="legend">
+            <li data-tone="reported"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#warning-circle"/></svg>Reported</li>
+            <li data-tone="progress"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#wrench"/></svg>In progress</li>
+            <li><span class="legend__high" aria-hidden="true"></span>High priority</li>
+            <li><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#monitor"/></svg>No open reports</li>
+          </ul>
+        </footer>
+      </section>
 
-      <table id="tracker-table">
-        <thead>
-          <tr>
-            <th>Ticket ID</th>
-            <th>Instructor</th>
-            <th>Lab</th>
-            <th>Computer</th>
-            <th>Equipment</th>
-            <th>Issue</th>
-            <th>Priority</th>
-            <th>Status</th>
-            <th>Reported At</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="tracker-body">
-          <tr><td colspan="10">Loading reports...</td></tr>
-        </tbody>
-      </table>
-    </section>
+      <aside id="insights" class="panel insights" data-for="technician" aria-labelledby="insights-title">
+        <header class="panel__head"><h2 id="insights-title">Insights</h2></header>
+        <div class="stats">
+          <div class="stat"><p class="stat__label">Open now</p><p class="stat__value" data-stat="open">0</p></div>
+          <div class="stat"><p class="stat__label">Resolved</p><p class="stat__value" data-stat="resolved">0%</p></div>
+          <div class="stat"><p class="stat__label">Duplicates</p><p class="stat__value" data-stat="dup">0%</p></div>
+        </div>
+        <h3 class="label">Reports by lab</h3>
+        <ol class="bars" data-bars="lab" aria-label="Reports by lab"></ol>
+        <h3 class="label">Reports by equipment</h3>
+        <ol class="bars" data-bars="equipment" aria-label="Reports by equipment"></ol>
+      </aside>
 
-    <!-- ============================= -->
-    <!-- ANALYTICS — Technician only   -->
-    <!-- ============================= -->
-    <section id="analytics-section" data-role="technician">
-      <h2>📈 Analytics & Insights</h2>
-      <div id="analytics-content">
-        <p>Loading insights...</p>
-      </div>
-    </section>
-
-    <footer>
-      <p>CCS Lab Equipment Issue Tracker — Group Project Prototype</p>
-    </footer>
+      <section id="tracker" class="panel tracker" aria-labelledby="tracker-title">
+        <header class="panel__head">
+          <h2 id="tracker-title">Tracking sheet</h2>
+          <label class="search tracker__search">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#magnifying-glass"/></svg>
+            <input type="search" placeholder="Search seat, equipment, instructor" aria-label="Search tickets">
+          </label>
+        </header>
+        <div class="segmented tracker__filters" role="group" aria-label="Filter by status"></div>
+        <div class="table-wrap"><table class="table"><thead></thead><tbody></tbody></table></div>
+        <div class="empty tracker__empty" hidden></div>
+      </section>
+    </main>
   </div>
 
-  <script type="module" src="source/app.js"></script>
+  <!-- Report sheet (instructor) -->
+  <dialog id="report-sheet" class="sheet" aria-labelledby="report-title">
+    <form class="sheet__inner">
+      <header class="sheet__head">
+        <div><p class="label">Report a problem</p><h2 id="report-title" class="sheet__title"></h2></div>
+        <button type="button" class="btn btn--ghost btn--icon sheet__close" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"/></svg></button>
+      </header>
+      <div class="sheet__body">
+        <div class="sheet__existing" hidden></div>
+        <input type="hidden" name="labRoom">
+        <input type="hidden" name="computerNumber">
+        <label class="field">
+          <span class="label">Instructor name</span>
+          <input name="instructorName" autocomplete="name" required>
+        </label>
+        <fieldset class="field">
+          <legend class="label">What's broken?</legend>
+          <div class="tiles">
+            <label class="tile"><input type="radio" name="equipmentType" value="Keyboard" required><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#keyboard"/></svg>Keyboard</label>
+            <label class="tile"><input type="radio" name="equipmentType" value="Mouse"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#mouse-simple"/></svg>Mouse</label>
+            <label class="tile"><input type="radio" name="equipmentType" value="Computer"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#desktop-tower"/></svg>Computer</label>
+          </div>
+        </fieldset>
+        <label class="field">
+          <span class="label">Describe the problem</span>
+          <textarea name="issueDescription" rows="3" placeholder="What happens? When did it start?" required></textarea>
+        </label>
+        <label class="field">
+          <span class="label">Student who reported it <span class="muted">(optional)</span></span>
+          <input name="reportedBy" autocomplete="off">
+        </label>
+        <fieldset class="field">
+          <legend class="label">Priority</legend>
+          <div class="segmented segmented--fill">
+            <label class="seg"><input type="radio" name="priority" value="Low">Low</label>
+            <label class="seg"><input type="radio" name="priority" value="Medium" checked>Medium</label>
+            <label class="seg"><input type="radio" name="priority" value="High">High</label>
+          </div>
+        </fieldset>
+      </div>
+      <footer class="sheet__foot"><button type="submit" class="btn btn--primary btn--block">Send report</button></footer>
+    </form>
+  </dialog>
+
+  <!-- Ticket drawer -->
+  <dialog id="ticket-drawer" class="sheet" aria-labelledby="drawer-title">
+    <div class="sheet__inner">
+      <header class="sheet__head">
+        <div><p class="label">Tickets</p><h2 id="drawer-title" class="sheet__title"></h2></div>
+        <button type="button" class="btn btn--ghost btn--icon sheet__close" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#x"/></svg></button>
+      </header>
+      <div class="sheet__body"></div>
+    </div>
+  </dialog>
+
+  <!-- Confirm -->
+  <dialog id="confirm" class="confirm" aria-labelledby="confirm-message">
+    <form method="dialog">
+      <p id="confirm-message"></p>
+      <div class="confirm__actions">
+        <button value="cancel" class="btn btn--secondary">Cancel</button>
+        <button id="confirm-ok" value="ok" class="btn btn--primary">OK</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toasts" class="toasts" popover="manual" role="status" aria-live="polite"></div>
+
+  <!-- Demo walkthrough -->
+  <div id="coach" class="coach" hidden>
+    <div class="coach__spot"></div>
+    <div class="coach__card" role="dialog" aria-label="Walkthrough" aria-live="polite">
+      <p class="coach__count"></p>
+      <p class="coach__text"></p>
+      <div class="coach__actions">
+        <button type="button" class="btn btn--ghost btn--sm coach__skip">Skip</button>
+        <button type="button" class="btn btn--primary btn--sm coach__next">Next</button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
